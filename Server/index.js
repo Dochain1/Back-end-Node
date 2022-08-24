@@ -1,5 +1,5 @@
-const express = require('express');
-const routerApi = require('../Routes/index.js');
+import express from 'express';
+import { routerApi } from '../Routes/index.js';
 
 const app = express();
 const PORT = process.env.PORT || 8000;

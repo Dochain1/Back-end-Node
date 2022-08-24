@@ -10,5 +10,26 @@
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "jsonwebtoken": "^8.5.1"
-  }
+  },
+  "name": "back-end-node",
+  "description": "Repo para el desarrollo de la API Rest. Mediar peticiones con la blockchain y el front (testing).",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon ./Server/index.js",
+    "start": "./Server/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dochain1/Back-end-Node.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Dochain1/Back-end-Node/issues"
+  },
+  "homepage": "https://github.com/Dochain1/Back-end-Node#readme",
+  "type": "module"
 }
