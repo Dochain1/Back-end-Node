@@ -6,12 +6,12 @@ const PORT = process.env.PORT || 8000;
 
 app.use(express.json());
 
-app.get('/', (res, req) => {
+app.get('/', (req, res) => {
   res.send("DOCHAIN SERVER");
 });
 
 routerApi(app);
 
 app.listen(PORT, () => {
-  console.log("Our port is " + PORT);
+  console.log("Listening in http://localhost:" + PORT + "/");
 });
