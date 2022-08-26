@@ -1,16 +1,4 @@
 {
-  "devDependencies": {
-    "eslint": "^8.22.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-prettier": "^4.2.1",
-    "nodemon": "^2.0.19",
-    "prettier": "^2.7.1"
-  },
-  "dependencies": {
-    "dotenv": "^16.0.1",
-    "express": "^4.18.1",
-    "jsonwebtoken": "^8.5.1"
-  },
   "name": "back-end-node",
   "description": "Repo para el desarrollo de la API Rest. Mediar peticiones con la blockchain y el front (testing).",
   "version": "1.0.0",
@@ -31,5 +19,19 @@
     "url": "https://github.com/Dochain1/Back-end-Node/issues"
   },
   "homepage": "https://github.com/Dochain1/Back-end-Node#readme",
-  "type": "module"
+  "type": "module",
+  "devDependencies": {
+    "eslint": "^8.22.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "nodemon": "^2.0.19",
+    "prettier": "^2.7.1"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "jsonwebtoken": "^8.5.1",
+    "mime-types": "^2.1.35",
+    "multer": "^1.4.5-lts.1"
+  }
 }

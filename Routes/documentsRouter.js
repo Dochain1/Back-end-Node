@@ -1,4 +1,9 @@
 import express from "express";
+import multer from "multer";
+
+const upload = multer({
+  dest: 'uploads/'
+});
 
 const router = express.Router();
 //GET
@@ -10,5 +15,11 @@ router.get('/', (req, res) => {
 })
 
 //POST
+router.post('/upload', upload.single(), (req, res) => {
+  res.json({
+    message: "file uploaded succesfully!"
+  })
+});
+
 
 export { router };

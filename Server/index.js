@@ -7,7 +7,9 @@ const PORT = process.env.PORT || 8000;
 app.use(express.json());
 
 app.get('/', (req, res) => {
-  res.send("DOCHAIN SERVER");
+  res.json({
+    name: "DOCHAIN"
+  });
 });
 
 routerApi(app);
