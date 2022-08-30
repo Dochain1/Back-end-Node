@@ -2,10 +2,17 @@ import express from "express";
 import path from "path";
 import multer from "multer";
 import mimeTypes from "mime-types";
-import { uploadToIPFS } from "../Services/ipfsService";
+import { uploadToIPFS } from "../Services/ipfsService.js";
+
+const storage = multer.diskStorage({
+  destination: 'uploads/',
+  filename: (req, file, callback) => {
+    callback("", Date.now() + "." + mimeTypes.extension(file.mimetype))
+  }
+});
 
 const upload = multer({
-  dest: 'uploads/'
+  storage: storage
 });
 
 const router = express.Router();
@@ -16,7 +23,7 @@ router.get('/', (req, res) => {
   //   complaint: 'complaint-example'
   // });
   const fileName = 'index.html';
-  res.sendFile(fileName,{
+  res.sendFile(fileName, {
     root: path.join(process.cwd() + '/views/'),
   }, (err) => {
     if (err) {
