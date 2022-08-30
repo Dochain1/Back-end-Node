@@ -2,6 +2,7 @@ import express from "express";
 import path from "path";
 import multer from "multer";
 import mimeTypes from "mime-types";
+import { uploadToIPFS } from "../Services/ipfsService";
 
 const upload = multer({
   dest: 'uploads/'
