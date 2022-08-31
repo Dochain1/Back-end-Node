@@ -1,13 +1,14 @@
 import express from "express";
 import path from "path";
 import multer from "multer";
+import * as fs from 'fs';
 import mimeTypes from "mime-types";
 import { uploadToIPFS } from "../Services/ipfsService.js";
 
 const storage = multer.diskStorage({
   destination: 'uploads/',
   filename: (req, file, callback) => {
-    callback("", Date.now() + "." + mimeTypes.extension(file.mimetype))
+  callback("", Date.now() + "." + mimeTypes.extension(file.mimetype))
   }
 });
 
@@ -44,7 +45,9 @@ router.post('/upload', upload.single('document'), async (req, res) => {
         data: "no file is selected"
       });
     } else {
-
+      // console.log(file)
+      const hash = await uploadToIPFS(req.file.filename);
+      // console.log(hash);
       res.json({
         status: true,
         message: "file uploaded succesfully!",
