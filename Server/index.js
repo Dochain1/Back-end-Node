@@ -1,5 +1,5 @@
 import express from 'express';
-import * as cors from 'cors';
+import cors from 'cors';
 import { routerApi } from '../Routes/index.js';
 
 const app = express();
@@ -23,7 +23,7 @@ const options = {
 app.use(express.json());
 app.use(cors(options));
 
-app.get('/', (req, res, next) => {
+app.get('/', (req, res) => {
   res.redirect('/api/v1/documents')
 });
 
