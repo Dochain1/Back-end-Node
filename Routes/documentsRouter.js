@@ -13,7 +13,7 @@ const upload = multer({
 
 const router = express.Router();
 //GET
-router.get('/', (req, res) => {
+router.get('/', (req, res, next) => {
   const fileName = 'index.html';
   res.sendFile(
     fileName,
