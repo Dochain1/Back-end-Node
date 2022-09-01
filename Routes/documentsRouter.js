@@ -1,18 +1,11 @@
 import express from 'express';
 import path from 'path';
 import multer from 'multer';
-// import * as fs from 'fs';
-// import mimeTypes from 'mime-types';
+import mimeTypes from 'mime-types';
 import { downloadFromIPFS, uploadToIPFS } from '../Services/ipfsService.js';
 import { encryptMultipleKeysPGP } from '../Services/encryptService.js';
 
 const storage = multer.memoryStorage();
-// {
-// destination: 'uploads/',
-// filename: (req, file, callback) => {
-// callback('', Date.now() + '.' + mimeTypes.extension(file.mimetype));
-// },
-// });
 
 const upload = multer({
   storage: storage,
@@ -21,7 +14,6 @@ const upload = multer({
 const router = express.Router();
 //GET
 router.get('/', (req, res) => {
-
   const fileName = 'index.html';
   res.sendFile(
     fileName,
@@ -53,24 +45,27 @@ router.post('/upload', upload.single('document'), async (req, res) => {
         keys,
         file.buffer
       );
-      const [response, hash] = await uploadToIPFS(Date.now()+ "." + mimeTypes.extension(file.mimetype), encrypted);
-      console.log(hash);
-      !response ? res.json({
-        status: false,
-        message: "An error ocurred. Don't worry, it wasn't your fault"
-      }) :
-      // console.log(file)
-      res.json({
-        status: true,
-        message: 'file uploaded succesfully!',
-        data: {
-          name: file.originalname,
-          mimetype: file.mimetype,
-          size: file.size,
-          cid: hash,
-          privateKey: privateKeysEncrypted,
-        },
-      });
+      const [response, hash] = await uploadToIPFS(
+        Date.now() + '.' + mimeTypes.extension(file.mimetype),
+        Buffer.from(encrypted)
+      );
+      !response
+        ? res.json({
+            status: false,
+            message: "An error ocurred. Don't worry, it wasn't your fault",
+          })
+        : // console.log(file)
+          res.json({
+            status: true,
+            message: 'file uploaded succesfully!',
+            data: {
+              name: file.originalname,
+              mimetype: file.mimetype,
+              size: file.size,
+              cid: hash,
+              privateKey: privateKeysEncrypted,
+            },
+          });
     }
   } catch (error) {
     res.status(500).json({

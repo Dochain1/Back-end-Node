@@ -46,7 +46,6 @@ export const encryptMultipleKeysPGP = async (keys, file) => {
     encryptionKeys: publicKeys,
     format: 'binary',
   });
-  console.log(privateKeysArmored[0]);
   const privateKeysEncrypted = await Promise.all(
     keys.map(async (key) => {
       return await encryptDataEthereum(key, privateKeysArmored[0]);
@@ -59,7 +58,7 @@ export const decryptPGP = async (encrypted) => {
   const encryptedMessage = await openpgp.readMessage({
     binaryMessage: encrypted, // parse encrypted bytes
   });
-  const privateKeyArmored = privateKeysArmored[1];
+  const privateKeyArmored = privateKeysArmored[0];
   const passphrase = `KEY`;
   const privateKey = await openpgp.decryptKey({
     privateKey: await openpgp.readPrivateKey({ armoredKey: privateKeyArmored }),

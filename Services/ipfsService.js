@@ -7,7 +7,7 @@ const uploadToIPFS = async (PATH, FILE) => {
   try {
     const { cid } = await IPFSnode.add({
       path: PATH,
-      content: FILE
+      content: FILE,
     });
     return [true, cid.toString()];
   } catch (error) {
@@ -17,8 +17,7 @@ const uploadToIPFS = async (PATH, FILE) => {
 };
 
 const downloadFromIPFS = async (cid) => {
-  const IPFSnode = await create();
-  const fileContent = await toBuffer(IPFSnode.get(cid));
+  const fileContent = await toBuffer(IPFSnode.cat(cid));
   return fileContent;
 };
 

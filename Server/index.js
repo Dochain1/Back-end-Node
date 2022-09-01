@@ -7,8 +7,9 @@ const PORT = process.env.PORT || 8000;
 
 const allowlist = [
   'https://dochain.vercel.app',
-  `http://localhost:${PORT}`
-]
+  `http://localhost:${PORT}`,
+  'http://localhost:3000',
+];
 
 const options = {
   origin: (origin, cb) => {
