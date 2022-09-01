@@ -7,24 +7,25 @@ const PORT = process.env.PORT || 8000;
 
 const allowlist = [
   'https://dochain.vercel.app/',
-  `http://localhost:${PORT}/`
-]
+  `http://localhost:${PORT}/`,
+  'http://localhost:3000',
+];
 
 const options = {
   origin: (origin, cb) => {
     if (allowlist.includes(origin) || !origin) {
       cb(null, true);
     } else {
-      cb(new Error('not allowed'))
+      cb(new Error('not allowed'));
     }
-  }
-}
+  },
+};
 
 app.use(express.json());
 app.use(cors(options));
 
 app.get('/', (req, res) => {
-  res.redirect('/api/v1/documents')
+  res.redirect('/api/v1/documents');
 });
 
 routerApi(app);
