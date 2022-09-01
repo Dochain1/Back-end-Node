@@ -1,14 +1,14 @@
-import * as fs from 'fs';
 import { create } from 'ipfs-core';
 
-const uploadToIPFS = async (PATH) => {
+const IPFSnode = await create();
+
+const uploadToIPFS = async (PATH, FILE) => {
   try {
-    const IPFSnode = await create();
     const { cid } = await IPFSnode.add({
       path: PATH,
-      content: fs.readFileSync(PATH)
+      content: FILE
     });
-    return cid.toString();
+    return [true, cid.toString()];
   } catch (error) {
     console.log(error);
     return false;

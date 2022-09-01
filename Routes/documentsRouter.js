@@ -1,16 +1,11 @@
 import express from "express";
 import path from "path";
 import multer from "multer";
-import * as fs from 'fs';
+// import * as fs from 'fs';
 import mimeTypes from "mime-types";
 import { uploadToIPFS } from "../Services/ipfsService.js";
 
-const storage = multer.diskStorage({
-  destination: 'uploads/',
-  filename: (req, file, callback) => {
-  callback("", Date.now() + "." + mimeTypes.extension(file.mimetype))
-  }
-});
+const storage = multer.memoryStorage();
 
 const upload = multer({
   storage: storage
@@ -19,10 +14,7 @@ const upload = multer({
 const router = express.Router();
 //GET
 router.get('/', (req, res) => {
-  // res.json({
-  //   name: 'document-example',
-  //   complaint: 'complaint-example'
-  // });
+
   const fileName = 'index.html';
   res.sendFile(fileName, {
     root: path.join(process.cwd() + '/views/'),
@@ -45,9 +37,12 @@ router.post('/upload', upload.single('document'), async (req, res) => {
         data: "no file is selected"
       });
     } else {
-      // console.log(file)
-      const hash = await uploadToIPFS(req.file.filename);
-      // console.log(hash);
+      const [response, hash] = await uploadToIPFS(Date.now()+ "." + mimeTypes.extension(file.mimetype), file.buffer);
+      console.log(hash);
+      !response ? res.json({
+        status: false,
+        message: "An error ocurred. Don't worry, it wasn't your fault"
+      }) :
       res.json({
         status: true,
         message: "file uploaded succesfully!",

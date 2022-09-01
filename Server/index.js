@@ -6,8 +6,8 @@ const app = express();
 const PORT = process.env.PORT || 8000;
 
 const allowlist = [
-  'https://dochain.vercel.app/',
-  `http://localhost:${PORT}/`
+  'https://dochain.vercel.app',
+  `http://localhost:${PORT}`
 ]
 
 const options = {
