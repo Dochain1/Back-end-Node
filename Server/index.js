@@ -15,16 +15,16 @@ const options = {
     if (allowlist.includes(origin) || !origin) {
       cb(null, true);
     } else {
-      cb(new Error('not allowed'))
+      cb(new Error('not allowed'));
     }
-  }
-}
+  },
+};
 
 app.use(express.json());
 app.use(cors(options));
 
 app.get('/', (req, res) => {
-  res.redirect('/api/v1/documents')
+  res.redirect('/api/v1/documents');
 });
 
 routerApi(app);

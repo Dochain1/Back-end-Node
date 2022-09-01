@@ -1,4 +1,5 @@
 import { create } from 'ipfs-core';
+import toBuffer from 'it-to-buffer';
 
 const IPFSnode = await create();
 
@@ -13,7 +14,12 @@ const uploadToIPFS = async (PATH, FILE) => {
     console.log(error);
     return false;
   }
-}
+};
 
-export { uploadToIPFS };
+const downloadFromIPFS = async (cid) => {
+  const IPFSnode = await create();
+  const fileContent = await toBuffer(IPFSnode.get(cid));
+  return fileContent;
+};
 
+export { uploadToIPFS, downloadFromIPFS };
