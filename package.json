@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon ./Server/index.js",
-    "start": "./Server/index.js",
+    "start": "node ./Server/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -38,5 +38,8 @@
     "multer": "^1.4.5-lts.1",
     "openpgp": "^5.5.0",
     "path": "^0.12.7"
+  },
+  "engines": {
+    "node": "16.x"
   }
 }
