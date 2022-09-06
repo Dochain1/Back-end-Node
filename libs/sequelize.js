@@ -6,6 +6,8 @@ const URI = process.env.POSTGRESCONNECT;
 
 
 const sequelize = new Sequelize(URI, {
-  dialect: "postgres"
+  dialect: "postgres",
+  logging: true
 });
 
+export { sequelize };
