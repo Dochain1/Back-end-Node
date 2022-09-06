@@ -14,5 +14,14 @@ router.get('/', (req, res) => {
 })
 
 //POST
+router.post('/', (req, res) => {
+  try {
+    const body = req.body;
+    console.log(body);
+    res.status(201).json(body);
+  } catch (error) {
+    console.error(error);
+  }
+})
 
 export { router };
