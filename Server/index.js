@@ -1,6 +1,6 @@
 import express from 'express';
 import { routerApi } from '../Routes/index.js';
-import { logErrors, errorHandler, boomErrorHandler } from '../middlewares/errorHandler'
+import { logErrors, errorHandler, boomErrorHandler } from '../middlewares/errorHandler.js'
 
 const app = express();
 const PORT = process.env.PORT || 8000;

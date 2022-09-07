@@ -1,6 +1,6 @@
 import { sequelize } from "../libs/sequelize";
 import { Boom } from "@hapi/boom";
-
+import { models } from "../libs/sequelize.js"
 class BriefCase {
   constructor() {
     this.briefCases = [];
@@ -14,8 +14,9 @@ class BriefCase {
     return newBriefCase;
   }
 
-  find() {
-    return this.briefCases;
+  async find() {
+    const briefcases = await models.briefcase.findAll();
+    return briefcases;
   }
 
   async findOne(id) {

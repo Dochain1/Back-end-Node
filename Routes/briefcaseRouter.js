@@ -1,5 +1,5 @@
 import express from "express";
-import { validatorHandler } from "../middlewares/validatorHandler";
+import { validatorHandler } from "../middlewares/validatorHandler.js";
 
 
 const router = express.Router();

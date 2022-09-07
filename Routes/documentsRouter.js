@@ -1,9 +1,9 @@
 import express from "express";
 import path from "path";
 import multer from "multer";
-}import mimeTypes from "mime-types";
+import mimeTypes from "mime-types";
 import { uploadToIPFS } from "../Services/ipfsService.js";
-import { validatorHandler } from "../middlewares/validatorHandler";
+import { validatorHandler } from "../middlewares/validatorHandler.js";
 
 
 const storage = multer.diskStorage({
