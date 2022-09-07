@@ -57,11 +57,11 @@ class briefcase extends Model {
     return {
       sequelize,
       tableName: BRIEFCASE_TABLE,
-      modelName: 'briefcase',
+      modelName: 'Briefcase',
       timestamps: false
     }
   }
 }
 
 
-export { BRIEFCASE_TABLE, briefcaseSchema, briefcase };
+export { BRIEFCASE_TABLE, briefcaseSchema, Briefcase };

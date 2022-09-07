@@ -1,46 +1,46 @@
 import { sequelize } from "../libs/sequelize";
 import { Boom } from "@hapi/boom";
 import { models } from "../libs/sequelize.js"
-class BriefCase {
+class BriefcaseService {
   constructor() {
-    this.briefCases = [];
+    this.briefcases = [];
   }
 
   async create(data) {
-    const newBriefCase = {
+    const newBriefcase = {
       ...data
     };
-    this.briefCases.push(newBriefCase);
-    return newBriefCase;
+    this.briefcases.push(newBriefcase);
+    return newBriefcase;
   }
 
   async find() {
-    const briefcases = await models.briefcase.findAll();
+    const briefcases = await models.Briefcase.findAll();
     return briefcases;
   }
 
   async findOne(id) {
-    const briefCase = this.briefCases.find(item => item.id === id);
-    if (!briefCase) {
+    const briefcase = this.briefcases.find(item => item.id === id);
+    if (!briefcase) {
       throw Boom.notFound('Briefcase not found');
     }
-    return briefCase;
+    return briefcase;
   }
 
   async update(id, changes) {
-    const index = this.briefCases.findIndex(item => item.id === id);
+    const index = this.briefcases.findIndex(item => item.id === id);
     if (index === -1) {
-      throw Boom.notFound('product not found');
+      throw Boom.notFound('Briefcase not found');
     }
-    const briefCase = this.briefCases[index];
-    this.briefCases[index] = {
-      ...briefCase,
+    const briefcase = this.briefcases[index];
+    this.briefcases[index] = {
+      ...briefcase,
       ...changes
     };
-    return this.briefCases[index];
+    return this.briefcases[index];
   }
 
 }
 
 
-export { BriefCase };
+export { BriefcaseService };
