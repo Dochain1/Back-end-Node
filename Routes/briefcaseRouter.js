@@ -1,4 +1,6 @@
 import express from "express";
+import { validatorHandler } from "../middlewares/validatorHandler";
+
 
 const router = express.Router();
 
