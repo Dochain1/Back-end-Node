@@ -1,20 +1,25 @@
 import { Model, DataTypes, Sequelize } from 'sequelize';
 
-const BRIEFCASE_TABLE = 'briefcases';
+const BRIEFCASE_TABLE = 'briefcase';
 
 const briefcaseSchema = {
-  id: {
+  case_id: {
     allowNull: false,
     autoIncrement: true,
     primaryKey: true,
     type: DataTypes.INTEGER
   },
-  type: {
+  token_id: {
+    allowNull: false,
+    primaryKey: true,
+    type: DataTypes.INTEGER
+  },
+  type_of_demand: {
     allowNull: false,
     type: DataTypes.STRING,
     unique: true,
   },
-  place: {
+  place_of_case: {
     allowNull: false,
     type: DataTypes.STRING
   },
@@ -22,30 +27,44 @@ const briefcaseSchema = {
     allowNull: false,
     type: DataTypes.STRING,
   },
-  dateCrime: {
+  crime_data: {
     allowNull: false,
     type: DataTypes.DATE,
   },
-  placeCrime: {
+  place_of_crime: {
     allowNull: false,
     type: DataTypes.STRING,
   },
-  nameDefendant: {
+  name_of_plaintiff: {
     allowNull: false,
     type: DataTypes.STRING,
   },
-  nameComplainant: {
+  name_of_defendant: {
     allowNull: false,
     type: DataTypes.STRING,
   },
-  lawyerDefendant: {
+  defendants_attorney: {
     allowNull: false,
     type: DataTypes.STRING,
   },
-  lawyerComplainant: {
+  plaintiffs_attorney: {
     allowNull: false,
     type: DataTypes.STRING,
   },
+  documents: {
+    allowNull: true,
+    type: DataTypes.BLOB
+  },
+  users: {
+    allowNull: true,
+    type: DataTypes.STRING
+  },
+  // createdAt: {
+  //   allowNull: false,
+  //   type: DataTypes.DATE,
+  //   field: 'create_at',
+  //   defaultValue: Sequelize.NOW
+  // }
 }
 
 class Briefcase extends Model {

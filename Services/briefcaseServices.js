@@ -1,16 +1,12 @@
 import { sequelize } from "../libs/sequelize.js";
 import { Boom } from "@hapi/boom";
-import models from "sequelize";
+
+const { models } = sequelize;
 class BriefcaseService {
-  constructor() {
-    this.briefcases = [];
-  }
+  constructor() {}
 
   async create(data) {
-    const newBriefcase = {
-      ...data
-    };
-    this.briefcases.push(newBriefcase);
+    const newBriefcase = await models.Briefcase.create(data)
     return newBriefcase;
   }
 
@@ -20,7 +16,7 @@ class BriefcaseService {
   }
 
   async findOne(id) {
-    const briefcase = this.briefcases.find(item => item.id === id);
+    const briefcase = await models.Briefcase.findByPk(id);
     if (!briefcase) {
       throw Boom.notFound('Briefcase not found');
     }
@@ -28,16 +24,9 @@ class BriefcaseService {
   }
 
   async update(id, changes) {
-    const index = this.briefcases.findIndex(item => item.id === id);
-    if (index === -1) {
-      throw Boom.notFound('Briefcase not found');
-    }
-    const briefcase = this.briefcases[index];
-    this.briefcases[index] = {
-      ...briefcase,
-      ...changes
-    };
-    return this.briefcases[index];
+    const briefcase = await this.findOne(id);
+    const update = await briefcase.update(changes);
+    return update;
   }
 
 }
