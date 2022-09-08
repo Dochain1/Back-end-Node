@@ -31,7 +31,7 @@ router.get('/:id', async (req, res) => {
 
 //POST
 router.post('/',
-  validatorHandler(createBriefcaseSchema, 'body'),
+  // validatorHandler(createBriefcaseSchema, 'body'),
   async (req, res) => {
     try {
       const body = req.body;

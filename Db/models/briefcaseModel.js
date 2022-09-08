@@ -29,7 +29,7 @@ const briefcaseSchema = {
   },
   crime_data: {
     allowNull: false,
-    type: DataTypes.DATE,
+    type: DataTypes.STRING,
   },
   place_of_crime: {
     allowNull: false,
