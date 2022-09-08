@@ -1,4 +1,4 @@
-import { Model, DataTypes, Sequelize } from 'sequelize';
+import { Model, DataTypes } from 'sequelize';
 
 const BRIEFCASE_TABLE = 'briefcase';
 
@@ -58,13 +58,7 @@ const briefcaseSchema = {
   users: {
     allowNull: true,
     type: DataTypes.STRING
-  },
-  // createdAt: {
-  //   allowNull: false,
-  //   type: DataTypes.DATE,
-  //   field: 'create_at',
-  //   defaultValue: Sequelize.NOW
-  // }
+  }
 }
 
 class Briefcase extends Model {

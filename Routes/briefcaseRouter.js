@@ -19,6 +19,16 @@ router.get('/', async (req, res) => {
   }
 })
 
+router.get('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const briefcases = await service.findOne(id);
+    res.json(briefcases);
+  } catch (error) {
+    console.error(error);
+  }
+})
+
 //POST
 router.post('/',
   validatorHandler(createBriefcaseSchema, 'body'),
@@ -26,6 +36,7 @@ router.post('/',
     try {
       const body = req.body;
       const newBriefcase = await service.create(body);
+      console.log(newBriefcase);
       res.status(201).json(newBriefcase);
     } catch (error) {
       console.error(error);
