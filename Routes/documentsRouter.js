@@ -17,6 +17,8 @@ import {
   saveDocumentInBriefcase,
   saveSecrets,
 } from '../Db/querys.js';
+import { validatorHandler } from "../middlewares/validatorHandler.js";
+
 
 const storage = multer.memoryStorage();
 
