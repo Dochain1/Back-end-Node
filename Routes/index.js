@@ -1,4 +1,5 @@
 import express from 'express';
+import { validatorHandler } from "../middlewares/validatorHandler.js";
 import {router as briefcaseRouter } from './briefcaseRouter.js';
 import {router as documentRouter } from './documentsRouter.js';
 // import {router as uploadsRouter } from './upload';
