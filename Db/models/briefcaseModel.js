@@ -2,7 +2,7 @@ import { Model, DataTypes } from 'sequelize';
 
 const BRIEFCASE_TABLE = 'briefcase';
 
-const briefcaseSchema = {
+const BriefcaseSchema = {
   case_id: {
     allowNull: false,
     autoIncrement: true,
@@ -77,4 +77,4 @@ class Briefcase extends Model {
 }
 
 
-export { BRIEFCASE_TABLE, briefcaseSchema, Briefcase };
+export { BRIEFCASE_TABLE, BriefcaseSchema, Briefcase };

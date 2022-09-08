@@ -11,9 +11,11 @@ const sequelize = new Sequelize(URI, {
   dialect: "postgres",
   logging: true
 });
+
+const { models } = sequelize;
 //receiving connection
 setupModels(sequelize);
 //sync ORM with db
 sequelize.sync();
 
-export { sequelize };
+export { sequelize, models };

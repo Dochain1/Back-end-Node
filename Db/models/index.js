@@ -1,7 +1,7 @@
-import { Briefcase, briefcaseSchema } from './briefcaseModel.js';
+import { Briefcase, BriefcaseSchema } from './briefcaseModel.js';
 
 function setupModels(sequelize) {
-  Briefcase.init(briefcaseSchema, Briefcase.config(sequelize));
+  Briefcase.init(BriefcaseSchema, Briefcase.config(sequelize));
 }
 
 export { setupModels };

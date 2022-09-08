@@ -1,7 +1,5 @@
-import { sequelize } from "../libs/sequelize.js";
+import { models } from "../libs/sequelize.js";
 import { Boom } from "@hapi/boom";
-
-const { models } = sequelize;
 class BriefcaseService {
   constructor() {}
 
