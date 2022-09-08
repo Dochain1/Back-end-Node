@@ -1,4 +1,4 @@
-import { Model, DataTypes, Sequelize } from ('sequelize');
+import { Model, DataTypes, Sequelize } from 'sequelize';
 
 const BRIEFCASE_TABLE = 'briefcases';
 
@@ -48,7 +48,7 @@ const briefcaseSchema = {
   },
 }
 
-class briefcase extends Model {
+class Briefcase extends Model {
   static associate() {
     // associate
   }

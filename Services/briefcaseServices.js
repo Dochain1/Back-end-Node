@@ -1,6 +1,6 @@
-import { sequelize } from "../libs/sequelize";
+import { sequelize } from "../libs/sequelize.js";
 import { Boom } from "@hapi/boom";
-import { models } from "../libs/sequelize.js"
+import models from "sequelize";
 class BriefcaseService {
   constructor() {
     this.briefcases = [];
