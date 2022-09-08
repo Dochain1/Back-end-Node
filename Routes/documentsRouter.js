@@ -4,6 +4,20 @@ import multer from 'multer';
 import mimeTypes from 'mime-types';
 import { downloadFromIPFS, uploadToIPFS } from '../Services/ipfsService.js';
 import { encryptMultipleKeysPGP } from '../Services/encryptService.js';
+import {
+  totalMinted,
+  mint,
+  getBriefCase,
+} from '../Services/smartContractService.js';
+import {
+  getFile,
+  getUser,
+  saveFile,
+  saveUser,
+  getSecrets,
+  saveDocumentInBriefcase,
+  saveSecrets,
+} from '../Db/querys.js';
 
 const storage = multer.memoryStorage();
 
@@ -35,6 +49,9 @@ router.post('/upload', upload.single('document'), async (req, res) => {
   try {
     const file = req.file;
     const keys = req.body.keys;
+    const address = req.body.address;
+    const caseId = req.body.caseId;
+    const type = req.body.type;
     if (!file) {
       res.status(400).send({
         status: false,
@@ -49,6 +66,11 @@ router.post('/upload', upload.single('document'), async (req, res) => {
         Date.now() + '.' + mimeTypes.extension(file.mimetype),
         Buffer.from(encrypted)
       );
+      const tokenId = parseInt(await totalMinted());
+      mint(address, hash);
+      const document = await saveFile(tokenId, caseId, type);
+      saveSecrets(keys, privateKeysEncrypted, document.document_id);
+      saveDocumentInBriefcase(caseId, document.document_id);
       !response
         ? res.json({
             status: false,
@@ -57,13 +79,14 @@ router.post('/upload', upload.single('document'), async (req, res) => {
         : // console.log(file)
           res.json({
             status: true,
-            message: 'file uploaded succesfully!',
+            message: 'file uploaded successfully!',
             data: {
               name: file.originalname,
               mimetype: file.mimetype,
               size: file.size,
               cid: hash,
               privateKey: privateKeysEncrypted,
+              tokenId: tokenId,
             },
           });
     }
@@ -77,14 +100,36 @@ router.post('/upload', upload.single('document'), async (req, res) => {
 
 router.post('/get_file', async (req, res) => {
   try {
+    const address = req.body.address;
+    const tokenId = req.body.tokenId;
     if (!req.body.cid) {
       res.json({ message: 'The CID is not valid' });
       return;
     }
+    const user = await getUser(address);
+    const document = await getFile(tokenId);
+    const secrets = await getSecrets(
+      user.rows[0].user_id,
+      document.rows[0].document_id
+    );
     const data = await downloadFromIPFS(req.body.cid);
-    res.send({
+    res.json({
       message: 'send encrypted file',
       encryptedFile: data,
+      privateKeyEncrypted: secrets.rows[0].private_key,
+    });
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
+router.post('/get_documents', async (req, res) => {
+  try {
+    const address = req.body.address;
+    const documents = await getBriefCase(address);
+    res.json({
+      message: 'send documents',
+      tokenIds: documents,
     });
   } catch (err) {
     res.status(500).send(err);
