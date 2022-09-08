@@ -1,5 +1,4 @@
 import express from 'express';
-import path from 'path';
 import multer from 'multer';
 import mimeTypes from 'mime-types';
 import { downloadFromIPFS, uploadToIPFS } from '../Services/ipfsService.js';
@@ -29,20 +28,23 @@ const upload = multer({
 const router = express.Router();
 //GET
 router.get('/', (req, res, next) => {
-  const fileName = 'index.html';
-  res.sendFile(
-    fileName,
-    {
-      root: path.join(process.cwd() + '/views/'),
-    },
-    (err) => {
-      if (err) {
-        next(err);
-      } else {
-        console.log('Sent:', fileName);
-      }
-    }
-  );
+  // const fileName = 'index.html';
+  // res.sendFile(
+  //   fileName,
+  //   {
+  //     root: path.join(process.cwd() + '/views/'),
+  //   },
+  //   (err) => {
+  //     if (err) {
+  //       next(err);
+  //     } else {
+  //       console.log('Sent:', fileName);
+  //     }
+  //   }
+  // );
+  res.send({
+    "message": "welcome to dochain api"
+  });
 });
 
 //POST
