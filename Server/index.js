@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import { routerApi } from '../Routes/index.js';
+import { logErrors, errorHandler, boomErrorHandler } from '../middlewares/errorHandler.js'
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -28,6 +29,11 @@ app.get('/', (req, res, next) => {
 });
 
 routerApi(app);
+
+//middlewares
+app.use(logErrors);
+app.use(boomErrorHandler);
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Listening in http://localhost:${PORT}/`);
