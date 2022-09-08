@@ -7,10 +7,9 @@ CREATE TABLE Users (
 );
 
 CREATE TABLE Documents (
-	document_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY
-	token_id INT NOT NULL,
-  document_type VARCHAR(50) NOT NULL
-  name VARCHAR(50) NOT NULL
+	token_id INT PRIMARY KEY,
+  	document_type VARCHAR(50) NOT NULL
+  	name VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE Secrets (
@@ -21,7 +20,7 @@ CREATE TABLE Secrets (
 		REFERENCES Users (user_id)
 		ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (document)
-		REFERENCES Documents (document_id)
+		REFERENCES Documents (token_id)
 		ON DELETE CASCADE ON UPDATE CASCADE
 );
 
@@ -54,7 +53,7 @@ CREATE TABLE BriefCaseDocuments (
 		REFERENCES Briefcase (case_id)
 		ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (document_id)
-		REFERENCES Documents (document_id)
+		REFERENCES Documents (token_id)
 		ON DELETE CASCADE ON UPDATE CASCADE
 );
 

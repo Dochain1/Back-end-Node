@@ -9,7 +9,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider(infuraEndpoint));
 const { abi, address } = doChainArtifact;
 const doChainContract = new web3.eth.Contract(abi, address[5]);
 const privateKey = process.env.PRIVATE_KEY;
-const publicKey = '0x078fc9E8cAe1B2961E1F6e9e543D2A9C05f9B718';
+const publicKey = process.env.PUBLIC_KEY;
 
 export const getBalanceOf = async (address) => {
   const response = await doChainContract.methods.balanceOf(address).call();
@@ -25,6 +25,16 @@ export const getTokenUri = async (tokenId) => {
   const response = await doChainContract.methods.tokenURI(tokenId).call({
     from: publicKey,
   });
+  return response;
+};
+
+export const getTokensUri = async (tokens) => {
+  const response = await Promise.all(
+    tokens.map(async (token) => {
+      const uri = await getTokenUri(token);
+      return uri;
+    })
+  );
   return response;
 };
 

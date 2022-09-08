@@ -8,6 +8,8 @@ import {
   totalMinted,
   mint,
   getBriefCase,
+  getTokensUri,
+  getTokenUri,
 } from '../Services/smartContractService.js';
 import {
   getFile,
@@ -16,6 +18,8 @@ import {
   getSecrets,
   saveDocumentInBriefcase,
   saveSecrets,
+  getDocumentsFromCase,
+  getFileById,
 } from '../Db/querys.js';
 
 const storage = multer.memoryStorage();
@@ -124,8 +128,15 @@ router.post('/get_file', async (req, res) => {
 
 router.post('/get_documents', async (req, res) => {
   try {
-    const address = req.body.address;
-    const documents = await getBriefCase(address);
+    const caseId = req.body.caseId;
+    const documentsByCase = await getDocumentsFromCase(caseId);
+    const documents = await Promise.all(
+      documentsByCase.rows.map(async (document) => {
+        const tokenID = await getFileById(document.document_id);
+        const uri = await getTokenUri(tokenID.rows[0].token_id);
+        return { ...tokenID.rows[0], uri };
+      })
+    );
     res.json({
       message: 'send documents',
       documents: documents,

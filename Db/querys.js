@@ -15,6 +15,13 @@ export const getFile = async (tokenId) => {
   return response;
 };
 
+export const getFileById = async (document_id) => {
+  const response = await client.query(
+    `SELECT * FROM documents WHERE document_id=${document_id}`
+  );
+  return response;
+};
+
 export const getUser = async (address) => {
   const user = await client.query(
     `SELECT * FROM users WHERE address='${address}'`
@@ -92,4 +99,11 @@ export const saveSecrets = async (keys, privatekeys, documentId) => {
   for (let i = 0; i < keys.length; i++) {
     await saveSecret(userIds[i].rows[0].user_id, documentId, privatekeys[i]);
   }
+};
+
+export const getDocumentsFromCase = async (caseId) => {
+  const response = await client.query(
+    `SELECT * FROM briefcasedocuments WHERE case_id=${caseId}`
+  );
+  return response;
 };
