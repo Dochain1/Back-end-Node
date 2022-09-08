@@ -1,16 +1,12 @@
 import Web3 from 'web3';
 import doChainArtifact from './doChainToken.js';
 import dotenv from 'dotenv';
-dotenv.config();
-const { abi, address } = doChainArtifact;
 import { getFile } from '../Db/querys.js';
 
-const web3 = new Web3(
-  new Web3.providers.HttpProvider(
-    'https://goerli.infura.io/v3/670938395ae445f5b894675c2a0838e6'
-  )
-);
-
+dotenv.config();
+const infuraEndpoint = process.env.INFURA;
+const web3 = new Web3(new Web3.providers.HttpProvider(infuraEndpoint));
+const { abi, address } = doChainArtifact;
 const doChainContract = new web3.eth.Contract(abi, address[5]);
 const privateKey = process.env.PRIVATE_KEY;
 const publicKey = '0x078fc9E8cAe1B2961E1F6e9e543D2A9C05f9B718';

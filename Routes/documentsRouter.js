@@ -13,7 +13,6 @@ import {
   getFile,
   getUser,
   saveFile,
-  saveUser,
   getSecrets,
   saveDocumentInBriefcase,
   saveSecrets,
@@ -129,7 +128,7 @@ router.post('/get_documents', async (req, res) => {
     const documents = await getBriefCase(address);
     res.json({
       message: 'send documents',
-      tokenIds: documents,
+      documents: documents,
     });
   } catch (err) {
     res.status(500).send(err);
