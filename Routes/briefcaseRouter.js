@@ -6,7 +6,7 @@ import {
   getBriefcaseSchema
 } from "../Schemas/briefcaseSchema.js";
 import { BriefcaseService } from "../Services/briefcaseServices.js";
-
+import { totalMinted } from '../Services/smartContractService.js';
 const router = express.Router();
 const service = new BriefcaseService();
 //GET
@@ -31,12 +31,12 @@ router.get('/:id', async (req, res) => {
 
 //POST
 router.post('/',
-  // validatorHandler(createBriefcaseSchema, 'body'),
+  validatorHandler(createBriefcaseSchema, 'body'),
   async (req, res) => {
     try {
-      const body = req.body;
+      const tokenId = parseInt(await totalMinted())
+      let body = { token_id: tokenId, ...req.body };
       const newBriefcase = await service.create(body);
-      console.log(newBriefcase);
       res.status(201).json(newBriefcase);
     } catch (error) {
       console.error(error);
