@@ -1,12 +1,12 @@
-import { models } from "../libs/sequelize.js";
-import { Boom } from "@hapi/boom";
+import { models } from '../libs/sequelize.js';
+import { Boom } from '@hapi/boom';
 
 const { Briefcase } = models;
 class BriefcaseService {
   constructor() {}
 
   async create(data) {
-    const newBriefcase = await Briefcase.create(data)
+    const newBriefcase = await Briefcase.create(data);
     return newBriefcase;
   }
 
@@ -28,8 +28,6 @@ class BriefcaseService {
     const update = await briefcase.update(changes);
     return update;
   }
-
 }
-
 
 export { BriefcaseService };

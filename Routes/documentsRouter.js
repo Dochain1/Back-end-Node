@@ -6,18 +6,19 @@ import { encryptMultipleKeysPGP } from '../Services/encryptService.js';
 import {
   totalMinted,
   mint,
-  getBriefCase,
+  getTokenUri,
 } from '../Services/smartContractService.js';
 import {
-  getFile,
+  getDocument,
   getUser,
-  saveFile,
+  saveDocument,
   getSecrets,
   saveDocumentInBriefcase,
   saveSecrets,
+  getDocumentsFromCase,
+  saveUser,
+  getAllUsers,
 } from '../Db/querys.js';
-import { validatorHandler } from "../middlewares/validatorHandler.js";
-
 
 const storage = multer.memoryStorage();
 
@@ -27,23 +28,9 @@ const upload = multer({
 
 const router = express.Router();
 //GET
-router.get('/', (req, res, next) => {
-  // const fileName = 'index.html';
-  // res.sendFile(
-  //   fileName,
-  //   {
-  //     root: path.join(process.cwd() + '/views/'),
-  //   },
-  //   (err) => {
-  //     if (err) {
-  //       next(err);
-  //     } else {
-  //       console.log('Sent:', fileName);
-  //     }
-  //   }
-  // );
+router.get('/', (req, res) => {
   res.send({
-    "message": "welcome to dochain api"
+    message: 'welcome to dochain api',
   });
 });
 
@@ -51,16 +38,26 @@ router.get('/', (req, res, next) => {
 router.post('/upload', upload.single('document'), async (req, res) => {
   try {
     const file = req.file;
-    const keys = req.body.keys;
-    const address = req.body.address;
     const caseId = req.body.caseId;
     const type = req.body.type;
+    const address = req.body.address;
     if (!file) {
       res.status(400).send({
         status: false,
         data: 'no file is selected',
       });
     } else {
+      const users = await getAllUsers(address);
+      const keys = users.map((user) => {
+        return user.public_key;
+      });
+      if (keys.includes('undefined')) {
+        res.json({
+          status: false,
+          message: 'Some user address has not provided its public key',
+        });
+        return;
+      }
       const { encrypted, privateKeysEncrypted } = await encryptMultipleKeysPGP(
         keys,
         file.buffer
@@ -70,26 +67,23 @@ router.post('/upload', upload.single('document'), async (req, res) => {
         Buffer.from(encrypted)
       );
       const tokenId = parseInt(await totalMinted());
-      mint(address, hash);
-      const document = await saveFile(tokenId, caseId, type);
-      saveSecrets(keys, privateKeysEncrypted, document.document_id);
-      saveDocumentInBriefcase(caseId, document.document_id);
+      mint(address[0], hash);
+      const document = await saveDocument(tokenId, type, file.originalname);
+      saveSecrets(keys, privateKeysEncrypted, document.token_id);
+      saveDocumentInBriefcase(caseId, document.token_id);
       !response
         ? res.json({
             status: false,
             message: "An error ocurred. Don't worry, it wasn't your fault",
           })
-        : // console.log(file)
-          res.json({
+        : res.json({
             status: true,
             message: 'file uploaded successfully!',
             data: {
               name: file.originalname,
-              mimetype: file.mimetype,
-              size: file.size,
-              cid: hash,
-              privateKey: privateKeysEncrypted,
-              tokenId: tokenId,
+              document_type: document.document_type,
+              token_id: tokenId,
+              uri: hash,
             },
           });
     }
@@ -110,16 +104,17 @@ router.post('/get_file', async (req, res) => {
       return;
     }
     const user = await getUser(address);
-    const document = await getFile(tokenId);
+    const document = await getDocument(tokenId);
     const secrets = await getSecrets(
-      user.rows[0].user_id,
-      document.rows[0].document_id
+      user.rows[0].public_key,
+      document.rows[0].token_id
     );
     const data = await downloadFromIPFS(req.body.cid);
     res.json({
       message: 'send encrypted file',
       encryptedFile: data,
       privateKeyEncrypted: secrets.rows[0].private_key,
+      name: document.rows[0].name,
     });
   } catch (err) {
     res.status(500).send(err);
@@ -128,11 +123,32 @@ router.post('/get_file', async (req, res) => {
 
 router.post('/get_documents', async (req, res) => {
   try {
-    const address = req.body.address;
-    const documents = await getBriefCase(address);
+    const caseId = req.body.caseId;
+    const documentsByCase = await getDocumentsFromCase(caseId);
+    const documents = await Promise.all(
+      documentsByCase.rows.map(async (document) => {
+        const tokenID = await getDocument(document.document_id);
+        const uri = await getTokenUri(tokenID.rows[0].token_id);
+        return { ...tokenID.rows[0], uri };
+      })
+    );
     res.json({
       message: 'send documents',
       documents: documents,
+    });
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
+router.post('/register', async (req, res) => {
+  try {
+    const address = req.body.address;
+    const publicKey = req.body.publicKey;
+    const email = req.body.email;
+    await saveUser(publicKey, address, email);
+    res.json({
+      message: 'Usuario registrado',
     });
   } catch (err) {
     res.status(500).send(err);

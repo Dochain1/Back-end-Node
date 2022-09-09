@@ -1,7 +1,7 @@
 import Web3 from 'web3';
 import doChainArtifact from './doChainToken.js';
 import dotenv from 'dotenv';
-import { getFile } from '../Db/querys.js';
+import { getDocument } from '../Db/querys.js';
 
 dotenv.config();
 const infuraEndpoint = process.env.INFURA;
@@ -22,6 +22,7 @@ export const totalMinted = async () => {
 };
 
 export const getTokenUri = async (tokenId) => {
+  console.log(tokenId);
   const response = await doChainContract.methods.tokenURI(tokenId).call({
     from: publicKey,
   });
@@ -40,7 +41,7 @@ export const getBriefCase = async (address = publicKey) => {
   const metadata = await Promise.all(
     briefcases.map(async (tokenId) => {
       const tokenUri = await getTokenUri(tokenId);
-      const document = await getFile(tokenId);
+      const document = await getDocument(tokenId);
       let type = 'No type';
       let name = 'No name';
       if (document.rows.length) {
