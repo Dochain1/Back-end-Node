@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import express from 'express';
 import {
   getAllUsers,
@@ -12,7 +11,7 @@ import {
   getBriefcaseSchema,
 } from '../Schemas/briefcaseSchema.js';
 import { BriefcaseService } from '../Services/briefcaseServices.js';
-import { totalMinted } from '../Services/smartContractService.js';
+import { mint, totalMinted } from '../Services/smartContractService.js';
 
 const router = express.Router();
 const service = new BriefcaseService();
@@ -48,11 +47,9 @@ router.get('/user/:address', async (req, res) => {
       });
     }
     const briefcases = await getBriefcasesByUser(user.rows[0].public_key);
-    console.log(briefcases);
     const briefcasesData = await Promise.all(
       briefcases.rows.map(async (briefcase) => {
         const Case = await service.findOne(briefcase.case_id);
-        console.log(Case.dataValues);
         return {
           case_id: Case.dataValues.case_id,
           typeComplaint: Case.dataValues.type_of_demand,
@@ -80,8 +77,7 @@ router.post(
   // validatorHandler(createBriefcaseSchema, 'body'),
   async (req, res) => {
     try {
-      const tokenId = parseInt(await totalMinted()) + 107;
-      console.log(req.body);
+      const tokenId = parseInt(await totalMinted());
       let body = {
         token_id: tokenId,
         type_of_demand: req.body.typeComplaint,
@@ -94,8 +90,8 @@ router.post(
         defendants_attorney: req.body.defendantLawyer,
         plaintiffs_attorney: req.body.demandingLawyer,
       };
-      console.log(body);
       const address = req.body.users;
+      mint(address[0], `Portfolio: ${tokenId}`);
       const users = await getAllUsers(address);
       const keys = users.map((user) => {
         return user.public_key;
