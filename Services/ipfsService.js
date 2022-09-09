@@ -1,7 +1,10 @@
 import { create } from 'ipfs-core';
 import toBuffer from 'it-to-buffer';
 
-const IPFSnode = await create();
+let IPFSnode;
+(async () => {
+  IPFSnode = await create();
+})();
 
 const uploadToIPFS = async (PATH, FILE) => {
   try {

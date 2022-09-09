@@ -1,31 +1,30 @@
 
 CREATE TABLE Users (
-	user_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	name VARCHAR (50)
-	public_key VARCHAR(255) NOT NULL
+	public_key VARCHAR(255) NOT NULL PRIMARY KEY,
 	address VARCHAR(255) NOT NULL
+	name VARCHAR (50),
+	email VARCHAR(50),
 );
 
 CREATE TABLE Documents (
-	document_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY
-	token_id INT NOT NULL,
-  document_type VARCHAR(50) NOT NULL
-  name VARCHAR(50) NOT NULL
+	token_id INT PRIMARY KEY,
+	document_type VARCHAR(50) NOT NULL,
+	name VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE Secrets (
-	user_id INT NOT NULL ,
+	user_key VARCHAR(255) NOT NULL ,
 	document INT NOT NULL,
-	private_key VARCHAR(100) NOT NULL,
-	FOREIGN KEY (user_id)
-		REFERENCES Users (user_id)
+	private_key TEXT NOT NULL,
+	FOREIGN KEY (user_key)
+		REFERENCES Users (public_key)
 		ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (document)
-		REFERENCES Documents (document_id)
+		REFERENCES Documents (token_id)
 		ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-ALTER TABLE ONLY  Secrets ADD CONSTRAINT "ID_PKEY" PRIMARY KEY (user_id,document);
+ALTER TABLE ONLY  Secrets ADD CONSTRAINT "ID_PKEY" PRIMARY KEY (user_key,document);
 
 CREATE TABLE Briefcase (
 	case_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -33,18 +32,12 @@ CREATE TABLE Briefcase (
 	type_of_demand VARCHAR (50) NOT NULL,
 	place_of_case VARCHAR (255) NOT NULL,
 	crime VARCHAR (255) NOT NULL,
-	crime_data DATE NOT NULL,
+	crime_date DATE NOT NULL,
 	place_of_crime VARCHAR(255) NOT NULL,
 	name_of_plaintiff VARCHAR(50),
 	name_of_defendant VARCHAR(50),
 	defendants_attorney VARCHAR(50),
-	plaintiffs_attorney VARCHAR(50),
-	FOREIGN KEY (Documents) 
-        REFERENCES documents (document_id) 
-        ON DELETE NO ACTION ON UPDATE NO ACTION,
-	FOREIGN KEY (Users) 
-        REFERENCES users (user_id) 
-        ON DELETE NO ACTION ON UPDATE NO ACTION
+	plaintiffs_attorney VARCHAR(50)
 );
 
 CREATE TABLE BriefCaseDocuments (
@@ -54,15 +47,15 @@ CREATE TABLE BriefCaseDocuments (
 		REFERENCES Briefcase (case_id)
 		ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (document_id)
-		REFERENCES Documents (document_id)
+		REFERENCES Documents (token_id)
 		ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE BriefcaseUsers(
-	user_id INT NOT NULL,
+	user_id VARCHAR(255) NOT NULL,
 	case_id INT NOT NULL,
 	FOREIGN KEY (user_id)
-		REFERENCES Users (user_id)
+		REFERENCES Users (public_key)
 		ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (case_id)
 		REFERENCES Briefcase (case_id)
