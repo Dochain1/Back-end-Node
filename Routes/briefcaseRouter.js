@@ -75,7 +75,6 @@ router.get('/user/:address', async (req, res) => {
 //POST
 router.post(
   '/',
-  validatorHandler(createBriefcaseSchema, 'body'),
   async (req, res) => {
     try {
       const tokenId = parseInt(await totalMinted());
