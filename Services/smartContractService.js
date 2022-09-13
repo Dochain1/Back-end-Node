@@ -9,7 +9,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider(infuraEndpoint));
 const { abi, address } = doChainArtifact;
 const doChainContract = new web3.eth.Contract(abi, address[5]);
 const privateKey = process.env.PRIVATE_KEY;
-const publicKey = '0x078fc9E8cAe1B2961E1F6e9e543D2A9C05f9B718';
+const publicKey = process.env.PUBLIC_KEY;
 
 export const getBalanceOf = async (address) => {
   const response = await doChainContract.methods.balanceOf(address).call();
@@ -55,8 +55,10 @@ export const getBriefCase = async (address = publicKey) => {
 
 const getTransactionData = async (smartContractMethod, parameters, address) => {
   const tx = smartContractMethod(parameters);
-  const gas = await tx.estimateGas({ from: address });
+  const gas = (await tx.estimateGas({ from: address })) * 2;
   const gasPrice = await web3.eth.getGasPrice();
+  const moreGas = parseInt(gasPrice) * 1.4;
+  console.log(gasPrice, typeof gasPrice, moreGas);
   const data = tx.encodeABI();
   const nonce = await web3.eth.getTransactionCount(address);
   const signedTx = await web3.eth.accounts.signTransaction(
@@ -64,7 +66,7 @@ const getTransactionData = async (smartContractMethod, parameters, address) => {
       to: doChainContract.options.address,
       data,
       gas,
-      gasPrice,
+      moreGas,
       nonce,
       chainId: 5,
     },
@@ -88,12 +90,19 @@ export const setHash = async (cid) => {
 };
 
 export const mint = async (to, hash) => {
-  await setHash(hash);
-  const signedTx = await getTransactionData(
-    doChainContract.methods.safeMint,
-    to,
-    publicKey
-  );
-  const receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
-  return receipt;
+  try {
+    await setHash(hash);
+    const signedTx = await getTransactionData(
+      doChainContract.methods.safeMint,
+      to,
+      publicKey
+    );
+    const receipt = await web3.eth.sendSignedTransaction(
+      signedTx.rawTransaction
+    );
+    return receipt;
+  } catch (error) {
+    console.log('Error: ', error);
+    return 'an error was ocurred';
+  }
 };
