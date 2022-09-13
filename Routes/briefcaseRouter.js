@@ -73,47 +73,43 @@ router.get('/user/:address', async (req, res) => {
 });
 
 //POST
-router.post(
-  '/',
-  validatorHandler(createBriefcaseSchema, 'body'),
-  async (req, res) => {
-    try {
-      const tokenId = parseInt(await totalMinted());
-      let body = {
-        token_id: tokenId,
-        type_of_demand: req.body.typeComplaint,
-        place_of_case: req.body.casePlace,
-        crime: req.body.crime,
-        crime_data: req.body.dateAndTimeOfComplaint,
-        place_of_crime: req.body.crimePlace,
-        name_of_plaintiff: req.body.demanding,
-        name_of_defendant: req.body.defendant,
-        defendants_attorney: req.body.defendantLawyer,
-        plaintiffs_attorney: req.body.demandingLawyer,
-      };
-      const address = req.body.users;
-      mint(address[0], `Portfolio: ${tokenId}`);
-      const users = await getAllUsers(address);
-      const keys = users.map((user) => {
-        return user.public_key;
+router.post('/', async (req, res) => {
+  try {
+    const tokenId = parseInt(await totalMinted());
+    let body = {
+      token_id: tokenId,
+      type_of_demand: req.body.typeComplaint,
+      place_of_case: req.body.casePlace,
+      crime: req.body.crime,
+      crime_data: req.body.dateAndTimeOfComplaint,
+      place_of_crime: req.body.crimePlace,
+      name_of_plaintiff: req.body.demanding,
+      name_of_defendant: req.body.defendant,
+      defendants_attorney: req.body.defendantLawyer,
+      plaintiffs_attorney: req.body.demandingLawyer,
+    };
+    const address = req.body.users;
+    mint(address[0], `Portfolio: ${tokenId}`);
+    const users = await getAllUsers(address);
+    const keys = users.map((user) => {
+      return user.public_key;
+    });
+    if (keys.includes('undefined')) {
+      res.status(401).json({
+        status: false,
+        message: 'Some user address has not provided its public key (register)',
       });
-      if (keys.includes('undefined')) {
-        res.status(401).json({
-          status: false,
-          message:
-            'Some user address has not provided its public key (register)',
-        });
-        return;
-      }
-
-      const newBriefcase = await service.create(body);
-      saveUsersInBriefcase(users, newBriefcase.dataValues.case_id);
-      res.status(201).json(newBriefcase);
-    } catch (error) {
-      console.error(error);
+      return;
     }
+
+    const newBriefcase = await service.create(body);
+    saveUsersInBriefcase(users, newBriefcase.dataValues.case_id);
+    res.status(201).json(newBriefcase);
+  } catch (error) {
+    res.status(500).json("An error ocurred. Don't worry, it wasn't your fault");
+    console.error(error);
   }
-);
+});
 
 //PATCH
 router.patch(

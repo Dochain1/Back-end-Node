@@ -109,7 +109,12 @@ router.post('/get_file', async (req, res) => {
       user.rows[0].public_key,
       document.rows[0].token_id
     );
+    console.log(user.rows[0]);
+    console.log(document.rows[0]);
+    console.log(secrets.rows[0]);
+    console.log(req.body.cid);
     const data = await downloadFromIPFS(req.body.cid);
+    console.log(data);
     res.json({
       message: 'send encrypted file',
       encryptedFile: data,
