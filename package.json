@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon ./Server/index.js",
-    "start": "./Server/index.js",
+    "start": "node ./Server/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

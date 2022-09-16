@@ -100,6 +100,7 @@ export const mint = async (to, hash) => {
     const receipt = await web3.eth.sendSignedTransaction(
       signedTx.rawTransaction
     );
+    console.log(receipt);
     return receipt;
   } catch (error) {
     console.log('Error: ', error);

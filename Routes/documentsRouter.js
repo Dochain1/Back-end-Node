@@ -40,7 +40,16 @@ router.post('/upload', upload.single('document'), async (req, res) => {
     const file = req.file;
     const caseId = req.body.caseId;
     const type = req.body.type;
-    const address = req.body.address;
+    let address = req.body.address;
+    if (typeof address === 'string') {
+      console.log('Hi');
+      let ads = address;
+      address = [ads];
+    }
+    console.log(typeof address);
+    console.log(address);
+    let uniqueAddress = [...new Set(address)];
+    address = uniqueAddress;
     if (!file) {
       res.status(400).send({
         status: false,
@@ -48,6 +57,8 @@ router.post('/upload', upload.single('document'), async (req, res) => {
       });
     } else {
       const users = await getAllUsers(address);
+      console.log(users);
+      console.log();
       const keys = users.map((user) => {
         return user.public_key;
       });
@@ -58,6 +69,7 @@ router.post('/upload', upload.single('document'), async (req, res) => {
         });
         return;
       }
+      console.log(keys);
       const { encrypted, privateKeysEncrypted } = await encryptMultipleKeysPGP(
         keys,
         file.buffer
@@ -67,10 +79,16 @@ router.post('/upload', upload.single('document'), async (req, res) => {
         Buffer.from(encrypted)
       );
       const tokenId = parseInt(await totalMinted());
+      console.log('upload:', tokenId);
       mint(address[0], hash);
+
       const document = await saveDocument(tokenId, type, file.originalname);
+      console.log(document);
+      console.log(keys, typeof keys);
+      console.log(privateKeysEncrypted, typeof privateKeysEncrypted);
       saveSecrets(keys, privateKeysEncrypted, document.token_id);
       saveDocumentInBriefcase(caseId, document.token_id);
+      console.log('upload: ', response);
       !response
         ? res.json({
             status: false,
@@ -88,6 +106,7 @@ router.post('/upload', upload.single('document'), async (req, res) => {
           });
     }
   } catch (error) {
+    console.log(error);
     res.status(500).json({
       status: false,
       message: error,
@@ -129,6 +148,7 @@ router.post('/get_file', async (req, res) => {
 router.post('/get_documents', async (req, res) => {
   try {
     const caseId = req.body.caseId;
+    console.log(caseId);
     const documentsByCase = await getDocumentsFromCase(caseId);
     const documents = await Promise.all(
       documentsByCase.rows.map(async (document) => {
@@ -142,6 +162,7 @@ router.post('/get_documents', async (req, res) => {
       documents: documents,
     });
   } catch (err) {
+    console.log(err);
     res.status(500).send(err);
   }
 });
@@ -155,6 +176,25 @@ router.post('/register', async (req, res) => {
     res.json({
       message: 'Usuario registrado',
     });
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
+router.get('/isRegister/:address', async (req, res) => {
+  try {
+    const { address } = req.params;
+    const user = await getUser(address);
+    if (user.rows.length) {
+      res.json({
+        message: 'Usuario registrado',
+        user: user.rows[0],
+      });
+    } else {
+      res.json({
+        message: 'Usuario no registrado',
+      });
+    }
   } catch (err) {
     res.status(500).send(err);
   }
